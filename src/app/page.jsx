@@ -17,7 +17,7 @@ export default async function Home() {
   return (
     <main>
       <nav className="flex justify-between">
-        <h1 className="font-bold">Books on Redis!</h1>
+        <h1 className="font-bold">Books wishlist!</h1>
         <Link href="/create" className="btn">
           Add a new book
         </Link>
