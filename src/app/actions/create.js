@@ -1,0 +1,32 @@
+"use server";
+
+import { getRedisClient } from "@/lib/db";
+import { redirect } from "next/navigation";
+
+export async function createBook(formData) {
+  const { title, rating, author, blurb } = Object.fromEntries(formData);
+  const client = await getRedisClient();
+
+  const id = Math.floor(Math.random() * 100000);
+  const unique = await client.zAdd(
+    "books",
+    {
+      value: title,
+      score: id,
+    },
+    { NX: true }
+  );
+
+  if (!unique) {
+    return { error: "That book has already been added" };
+  }
+
+  await client.hSet(`books:${id}`, {
+    title,
+    rating,
+    author,
+    blurb,
+  });
+
+  redirect("/");
+}
